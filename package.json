@@ -1,0 +1,63 @@
+{
+  "name": "testing-before-catch-the-rabbit",
+  "version": "1.0.0",
+  "description": "testing rabbitmq features with ttpescript",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "docker:rabbit:up": "docker-compose up -d test-docker-rabbitmq",
+    "docker:down": "docker-compose down -v --rmi=local"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brunau1/testing-before-catch-the-rabbit.git"
+  },
+  "author": "brunau1",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/brunau1/testing-before-catch-the-rabbit/issues"
+  },
+  "homepage": "https://github.com/brunau1/testing-before-catch-the-rabbit#readme",
+  "dependencies": {
+    "amqplib": "^0.10.3"
+  },
+  "devDependencies": {
+    "@types/amqplib": "^0.10.1",
+    "gts": "^3.1.1"
+  },
+  "prettier": "gts/.prettierrc.json",
+  "eslintConfig": {
+    "extends": "./node_modules/gts/",
+    "plugins": [
+      "simple-import-sort"
+    ],
+    "rules": {
+      "prettier/prettier": [
+        "error",
+        {
+          "endOfLine": "auto"
+        }
+      ],
+      "node/no-unpublished-import": 0,
+      "node/no-extraneous-import": 0,
+      "node/no-extraneous-require": 0,
+      "simple-import-sort/exports": "error",
+      "simple-import-sort/imports": "error",
+      "no-process-exit": 0,
+      "no-console": 1,
+      "@typescript-eslint/no-unused-vars": [
+        "error"
+      ],
+      "max-classes-per-file": [
+        "error",
+        1
+      ]
+    },
+    "ignorePatterns": [
+      "node_modules/",
+      "coverage*/",
+      "docs/",
+      "build/"
+    ]
+  }
+}
