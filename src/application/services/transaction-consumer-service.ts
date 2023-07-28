@@ -8,7 +8,7 @@ export class TransactionConsumerService extends StandardConsumer {
     super(configuration, channel);
   }
 
-  async processMessage(
+  protected async processMessage(
     payload: TransactionDto,
     messageProperties: MessageProperties
   ): Promise<void> {
@@ -18,5 +18,12 @@ export class TransactionConsumerService extends StandardConsumer {
         messageProperties.correlationId
       } | Received transaction: ${JSON.stringify(transaction)}`
     );
+  }
+
+  static create(
+    configuration: IConsumerConfiguration,
+    channel: Channel
+  ): TransactionConsumerService {
+    return new TransactionConsumerService(configuration, channel);
   }
 }

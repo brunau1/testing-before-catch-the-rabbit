@@ -4,12 +4,14 @@ import {RabbitConsumer} from '../interfaces/rabbit-consumer';
 import {IConsumerConfiguration} from '../interfaces/consumer-configuration';
 
 export abstract class StandardConsumer implements RabbitConsumer {
-  public abstract processMessage(
+  protected abstract processMessage(
     payload: unknown,
     messageProperties: MessageProperties
   ): Promise<void>;
 
   public async consume(): Promise<void> {
+    console.info(`Consuming messages`);
+
     const {queueName, prefetchCount, durable, consumerParameters} =
       this.configuration;
 
@@ -19,7 +21,7 @@ export abstract class StandardConsumer implements RabbitConsumer {
 
     await this.channel.consume(
       queueName,
-      async (message: Message | null) => await this.handleMessage(message),
+      this.handleMessage.bind(this),
       {...consumerParameters, noAck: false} // ensure that the consumer will not be acked automatically
     );
   }
@@ -30,6 +32,8 @@ export abstract class StandardConsumer implements RabbitConsumer {
 
   protected async handleMessage(message: Message | null): Promise<void> {
     if (message) {
+      console.info(`Message received`);
+
       const {requeueOnFailure} = this.configuration;
 
       try {
@@ -37,7 +41,7 @@ export abstract class StandardConsumer implements RabbitConsumer {
 
         await this.processMessage(parsedMessage, message.properties);
       } catch (error) {
-        //   console.error(error);
+        console.error(error);
 
         if (requeueOnFailure) {
           this.channel.nack(message, false, true);
